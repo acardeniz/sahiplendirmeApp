@@ -60,13 +60,9 @@ class ProfilePage extends StatelessWidget {
               title: const Text('Ayarlar'),
               onTap: () {
                 // Butona tıklandığında SnackBar göster
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Ayarlar menüsü açılıyor... (Buraya yönlendirme gelecek)',
-                    ),
-                  ),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('coming soon')));
               },
             ),
 
