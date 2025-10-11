@@ -213,10 +213,6 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hayvan Sahiplendirme'),
-        centerTitle: true,
-      ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
