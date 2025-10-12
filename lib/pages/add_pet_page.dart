@@ -26,7 +26,7 @@ class _AddPetPageState extends State<AddPetPage> {
   String? _selectedType;
   final List<String> petTypes = ['Köpek', 'Kedi', 'Kuş', 'Diğer'];
 
-  List<ContactField> _contactFields = [];
+  final List<ContactField> _contactFields = [];
   final List<String> contactOptions = [
     'Telefon',
     'Instagram',
@@ -84,7 +84,7 @@ class _AddPetPageState extends State<AddPetPage> {
           _imageUrlController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Lütfen hayvan türünü seçin ve bir resim ekleyin!'),
+            content: Text('Lütfen hayvan türünü seçin ve bir resim ekleyin'),
           ),
         );
         return;
@@ -144,7 +144,7 @@ class _AddPetPageState extends State<AddPetPage> {
                   filled: true,
                   fillColor: Colors.white,
                 ),
-                value: _selectedType,
+                initialValue: _selectedType,
                 items: petTypes.map((String type) {
                   return DropdownMenuItem<String>(
                     value: type,
@@ -322,7 +322,7 @@ class _AddPetPageState extends State<AddPetPage> {
             width: 120,
             child: DropdownButtonFormField<String>(
               isExpanded: true,
-              value: field.type,
+              initialValue: field.type,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),

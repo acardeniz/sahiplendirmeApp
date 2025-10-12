@@ -127,7 +127,7 @@ class ContactInfoDialog extends StatelessWidget {
     } else if (type == 'Instagram') {
       url = 'https://instagram.com/${value.replaceAll('@', '')}';
     } else if (type == 'Messenger') {
-      url = 'https://m.me/${value}';
+      url = 'https://m.me/$value';
     } else if (type == 'Diğer') {
       _copyAndNotify(context, value, type);
       return;

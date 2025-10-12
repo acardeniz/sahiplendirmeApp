@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         primaryColor: primaryColor,
         scaffoldBackgroundColor: lightBackgroundColor,
         appBarTheme: const AppBarTheme(
-          color: secondaryColor,
+          backgroundColor: secondaryColor,
           foregroundColor: Colors.white,
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
         primaryColor: darkPrimaryColor,
         scaffoldBackgroundColor: darkBackgroundColor,
         appBarTheme: const AppBarTheme(
-          color: darkSecondaryColor,
+          backgroundColor: darkSecondaryColor,
           foregroundColor: Colors.white,
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -195,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       HomeScreenContent(
         key: _homeKey,
         favoritePets: _favoritePets,
@@ -213,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
 
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Ana Sayfa'),
@@ -238,8 +238,8 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
         backgroundColor: Theme.of(context).primaryColor,
-        child: const Icon(Icons.pets, color: Colors.white, size: 36),
         shape: const CircleBorder(),
+        child: const Icon(Icons.pets, color: Colors.white, size: 36),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
@@ -327,22 +327,33 @@ class HomeScreenContentState extends State<HomeScreenContent> {
         ),
       ];
     }
+
     return allPetsData.map((pet) {
+      void showPetContact() {
+        showDialog(
+          context: context,
+          builder: (context) => ContactInfoDialog(pet: pet),
+        );
+      }
+
       return ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.network(
-          pet.imageUrl,
-          width: double.infinity,
-          height: 200,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Image.network(
-              'https://via.placeholder.com/400x200?text=Resim+Yuklenemedi',
-              width: double.infinity,
-              height: 200,
-              fit: BoxFit.cover,
-            );
-          },
+        child: InkWell(
+          onTap: showPetContact,
+          child: Image.network(
+            pet.imageUrl,
+            width: double.infinity,
+            height: 200,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Image.network(
+                'https://via.placeholder.com/400x200?text=Resim+Yuklenemedi',
+                width: double.infinity,
+                height: 200,
+                fit: BoxFit.cover,
+              );
+            },
+          ),
         ),
       );
     }).toList();
@@ -448,15 +459,13 @@ class HomeScreenContentState extends State<HomeScreenContent> {
                     ),
                   )
                 else
-                  ..._filteredPets
-                      .map(
-                        (pet) => PetAdoptionCard(
-                          pet: pet,
-                          favoritePets: widget.favoritePets,
-                          toggleFavorite: widget.toggleFavorite,
-                        ),
-                      )
-                      .toList(),
+                  ..._filteredPets.map(
+                    (pet) => PetAdoptionCard(
+                      pet: pet,
+                      favoritePets: widget.favoritePets,
+                      toggleFavorite: widget.toggleFavorite,
+                    ),
+                  ),
               ],
             ),
           ),

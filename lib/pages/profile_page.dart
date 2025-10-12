@@ -13,7 +13,6 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mevcut tema karanlık mı? (Sistem ayarını da kontrol eder)
     final isDarkMode =
         currentThemeMode == ThemeMode.dark ||
         (currentThemeMode == ThemeMode.system &&
@@ -46,7 +45,7 @@ class ProfilePage extends StatelessWidget {
                 onChanged: (bool newValue) {
                   toggleTheme(newValue);
                 },
-                activeColor: primaryColor,
+                activeThumbColor: primaryColor,
               ),
               onTap: () {
                 toggleTheme(!isDarkMode);
