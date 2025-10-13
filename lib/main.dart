@@ -338,6 +338,7 @@ class HomeScreenContentState extends State<HomeScreenContent> {
 
       return ClipRRect(
         borderRadius: BorderRadius.circular(20),
+
         child: InkWell(
           onTap: showPetContact,
           child: Image.network(
@@ -345,6 +346,7 @@ class HomeScreenContentState extends State<HomeScreenContent> {
             width: double.infinity,
             height: 200,
             fit: BoxFit.cover,
+
             errorBuilder: (context, error, stackTrace) {
               return Image.network(
                 'https://via.placeholder.com/400x200?text=Resim+Yuklenemedi',
@@ -409,7 +411,12 @@ class HomeScreenContentState extends State<HomeScreenContent> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildFilterButton(context, Icons.pets, 'Köpek', 'Köpek'),
-                    _buildFilterButton(context, Icons.star, 'Kedi', 'Kedi'),
+                    _buildFilterButton(
+                      context,
+                      Icons.mood_sharp,
+                      'Kedi',
+                      'Kedi',
+                    ),
                     _buildFilterButton(
                       context,
                       Icons.flutter_dash,

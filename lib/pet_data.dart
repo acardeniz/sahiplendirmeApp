@@ -1,6 +1,9 @@
+// lib/pet_data.dart
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
+import 'dart:ui';
 import 'constants.dart';
 
 String createWhatsAppLink(String phoneNumber) {
@@ -127,7 +130,7 @@ class ContactInfoDialog extends StatelessWidget {
     } else if (type == 'Instagram') {
       url = 'https://instagram.com/${value.replaceAll('@', '')}';
     } else if (type == 'Messenger') {
-      url = 'https://m.me/$value';
+      url = 'https://m.me/${value}';
     } else if (type == 'Diğer') {
       _copyAndNotify(context, value, type);
       return;
@@ -208,7 +211,18 @@ class PetAdoptionCard extends StatelessWidget {
   void _showContactDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => ContactInfoDialog(pet: pet),
+      barrierColor: Colors.transparent,
+      builder: (context) {
+        return ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            child: Container(
+              color: Colors.black12,
+              child: ContactInfoDialog(pet: pet),
+            ),
+          ),
+        );
+      },
     );
   }
 

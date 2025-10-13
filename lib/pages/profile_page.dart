@@ -36,7 +36,6 @@ class ProfilePage extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
-            // --- DARK MODE AYARI ---
             ListTile(
               leading: Icon(isDarkMode ? Icons.dark_mode : Icons.light_mode),
               title: const Text('Karanlık Mod'),
@@ -51,21 +50,25 @@ class ProfilePage extends StatelessWidget {
                 toggleTheme(!isDarkMode);
               },
             ),
-            // --------------------------
-
-            // --- AYARLAR BUTONU GÜNCELLENDİ ---
+            ListTile(
+              leading: const Icon(Icons.translate),
+              title: const Text('Dil'),
+              onTap: () {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('coming soon')));
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Ayarlar'),
               onTap: () {
-                // Butona tıklandığında SnackBar göster
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(const SnackBar(content: Text('coming soon')));
               },
             ),
 
-            // ------------------------------------
             ListTile(
               leading: const Icon(Icons.notifications),
               title: const Text('Bildirimler'),
