@@ -1,0 +1,22 @@
+{
+  "@@locale": "tr",
+  "homePage": "Ana Sayfa",
+  "search": "Ara",
+  "favorites": "Favoriler",
+  "profile": "Profil",
+  "adoptionCategories": "Sahiplendirme Kategorileri",
+  "dog": "Köpek",
+  "cat": "Kedi",
+  "bird": "Kuş",
+  "all": "Hepsi",
+  "popularAds": "Popüler İlanlar",
+  "adsShowing": "{type} ilanları gösteriliyor!",
+  "noAdsInCategory": "Seçili kategoride ilan bulunmamaktadır.",
+  "ads": "İlanları", 
+  "searchHint": "Tür, ırk veya ada göre ara (ör: kedi)...",
+  "noResultsFound": "Aradığınız kriterlere uygun ilan bulunamadı.",
+  "language" : "Dil",
+  "notifications" : "Bildirimler",
+  "darkMode" : "Karanlik Mod",
+  "logOut" : "Cikis Yap"
+}
