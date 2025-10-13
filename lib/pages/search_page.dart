@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pet_data.dart';
 import '../constants.dart';
+import 'package:testapp/l10n/app_localizations.dart';
 
 class SearchPage extends StatefulWidget {
   final List<String> searchHistory;
@@ -81,6 +82,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final showHistory = _query.isEmpty && widget.searchHistory.isNotEmpty;
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       children: [
@@ -89,7 +91,7 @@ class _SearchPageState extends State<SearchPage> {
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: 'Tür, ırk veya ada göre ara (ör: kedi)...',
+              hintText: l10n.searchHint,
               prefixIcon: const Icon(Icons.search, color: primaryColor),
               suffixIcon: _query.isNotEmpty
                   ? IconButton(
@@ -133,12 +135,12 @@ class _SearchPageState extends State<SearchPage> {
 
         Expanded(
           child: _filteredResults.isEmpty
-              ? const Center(
+              ? Center(
                   child: Padding(
-                    padding: EdgeInsets.all(40.0),
+                    padding: const EdgeInsets.all(40.0),
                     child: Text(
-                      'Aradığınız kriterlere uygun ilan bulunamadı.',
-                      style: TextStyle(color: Colors.grey),
+                      l10n.noResultsFound,
+                      style: const TextStyle(color: Colors.grey),
                     ),
                   ),
                 )

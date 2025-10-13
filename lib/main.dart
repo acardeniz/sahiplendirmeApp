@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:testapp/l10n/app_localizations.dart';
 import 'pages/search_page.dart';
 import 'pages/favorites_page.dart';
 import 'pages/profile_page.dart';
 import 'pages/add_pet_page.dart';
 import 'pet_data.dart';
 import 'constants.dart';
+
+const Locale turkishLocale = Locale('tr');
+const Locale englishLocale = Locale('en');
 
 void main() {
   runApp(const MyAppWrapper());
@@ -21,6 +26,7 @@ class MyAppWrapper extends StatefulWidget {
 
 class _MyAppWrapperState extends State<MyAppWrapper> {
   ThemeMode _themeMode = ThemeMode.system;
+  Locale _locale = turkishLocale;
 
   void _toggleTheme(bool isDarkMode) {
     setState(() {
@@ -28,23 +34,50 @@ class _MyAppWrapperState extends State<MyAppWrapper> {
     });
   }
 
+  void _changeLanguage(Locale newLocale) {
+    setState(() {
+      _locale = newLocale;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MyApp(themeMode: _themeMode, toggleTheme: _toggleTheme);
+    return MyApp(
+      themeMode: _themeMode,
+      toggleTheme: _toggleTheme,
+      locale: _locale,
+      changeLanguage: _changeLanguage,
+    );
   }
 }
 
 class MyApp extends StatelessWidget {
   final ThemeMode themeMode;
   final Function(bool) toggleTheme;
+  final Locale locale;
+  final Function(Locale) changeLanguage;
 
-  const MyApp({super.key, required this.themeMode, required this.toggleTheme});
+  const MyApp({
+    super.key,
+    required this.themeMode,
+    required this.toggleTheme,
+    required this.locale,
+    required this.changeLanguage,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: themeMode,
+      locale: locale,
+      supportedLocales: const [turkishLocale, englishLocale],
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
 
       theme: ThemeData(
         primaryColor: primaryColor,
@@ -98,7 +131,12 @@ class MyApp extends StatelessWidget {
             ),
       ),
 
-      home: MyHomePage(toggleTheme: toggleTheme, currentThemeMode: themeMode),
+      home: MyHomePage(
+        toggleTheme: toggleTheme,
+        currentThemeMode: themeMode,
+        currentLocale: locale,
+        changeLanguage: changeLanguage,
+      ),
     );
   }
 }
@@ -106,11 +144,15 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   final Function(bool) toggleTheme;
   final ThemeMode currentThemeMode;
+  final Locale currentLocale;
+  final Function(Locale) changeLanguage;
 
   const MyHomePage({
     super.key,
     required this.toggleTheme,
     required this.currentThemeMode,
+    required this.currentLocale,
+    required this.changeLanguage,
   });
 
   @override
@@ -123,9 +165,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<HomeScreenContentState> _homeKey = GlobalKey();
   final Set<String> _favoritePets = {};
 
-  final List<String> _searchHistory = [];
-
   late SharedPreferences _prefs;
+  final List<String> _searchHistory = [];
 
   @override
   void initState() {
@@ -195,6 +236,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final List<Widget> pages = [
       HomeScreenContent(
         key: _homeKey,
@@ -209,21 +252,25 @@ class _MyHomePageState extends State<MyHomePage> {
       ProfilePage(
         toggleTheme: widget.toggleTheme,
         currentThemeMode: widget.currentThemeMode,
+        currentLocale: widget.currentLocale,
+        changeLanguage: widget.changeLanguage,
       ),
     ];
 
     return Scaffold(
       body: pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Ana Sayfa'),
-
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Ara'),
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: l10n.homePage),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: l10n.search),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
-            label: 'Favoriler',
+            label: l10n.favorites,
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: l10n.profile,
+          ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -264,7 +311,9 @@ class HomeScreenContentState extends State<HomeScreenContent> {
   String? _selectedType;
 
   List<PetAdoptionData> get _filteredPets {
-    if (_selectedType == null || _selectedType == 'Hepsi') {
+    if (_selectedType == null ||
+        _selectedType == 'Hepsi' ||
+        _selectedType == 'All') {
       return allPetsData;
     }
     return allPetsData.where((pet) => pet.type == _selectedType).toList();
@@ -278,17 +327,22 @@ class HomeScreenContentState extends State<HomeScreenContent> {
   ) {
     final isSelected =
         _selectedType == filterType ||
-        (filterType == 'Hepsi' && _selectedType == null);
+        ((filterType == 'Hepsi' || filterType == 'All') &&
+            _selectedType == null);
 
     final color = Theme.of(context).primaryColor;
 
     return InkWell(
       onTap: () {
         setState(() {
-          _selectedType = filterType == 'Hepsi' ? null : filterType;
+          _selectedType = (filterType == 'Hepsi' || filterType == 'All')
+              ? null
+              : filterType;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$label ilanları gösteriliyor!')),
+          SnackBar(
+            content: Text('$label ${AppLocalizations.of(context)!.adsShowing}'),
+          ),
         );
       },
       child: Column(
@@ -338,7 +392,6 @@ class HomeScreenContentState extends State<HomeScreenContent> {
 
       return ClipRRect(
         borderRadius: BorderRadius.circular(20),
-
         child: InkWell(
           onTap: showPetContact,
           child: Image.network(
@@ -346,7 +399,6 @@ class HomeScreenContentState extends State<HomeScreenContent> {
             width: double.infinity,
             height: 200,
             fit: BoxFit.cover,
-
             errorBuilder: (context, error, stackTrace) {
               return Image.network(
                 'https://via.placeholder.com/400x200?text=Resim+Yuklenemedi',
@@ -363,6 +415,8 @@ class HomeScreenContentState extends State<HomeScreenContent> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -399,7 +453,7 @@ class HomeScreenContentState extends State<HomeScreenContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Sahiplendirme Kategorileri',
+                  l10n.adoptionCategories,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -410,24 +464,24 @@ class HomeScreenContentState extends State<HomeScreenContent> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildFilterButton(context, Icons.pets, 'Köpek', 'Köpek'),
+                    _buildFilterButton(context, Icons.pets, l10n.dog, l10n.dog),
                     _buildFilterButton(
                       context,
                       Icons.mood_sharp,
-                      'Kedi',
-                      'Kedi',
+                      l10n.cat,
+                      l10n.cat,
                     ),
                     _buildFilterButton(
                       context,
                       Icons.flutter_dash,
-                      'Kuş',
-                      'Kuş',
+                      l10n.bird,
+                      l10n.bird,
                     ),
                     _buildFilterButton(
                       context,
                       Icons.view_list,
-                      'Hepsi',
-                      'Hepsi',
+                      l10n.all,
+                      l10n.all,
                     ),
                   ],
                 ),
@@ -440,8 +494,8 @@ class HomeScreenContentState extends State<HomeScreenContent> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
               _selectedType == null
-                  ? 'Popüler İlanlar'
-                  : '$_selectedType İlanları',
+                  ? l10n.popularAds
+                  : '$_selectedType ${l10n.ads}',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -456,23 +510,25 @@ class HomeScreenContentState extends State<HomeScreenContent> {
             child: Column(
               children: [
                 if (_filteredPets.isEmpty)
-                  const Center(
+                  Center(
                     child: Padding(
                       padding: EdgeInsets.all(40.0),
                       child: Text(
-                        'Seçili kategoride ilan bulunmamaktadır.',
+                        l10n.noAdsInCategory,
                         style: TextStyle(color: Colors.grey),
                       ),
                     ),
                   )
                 else
-                  ..._filteredPets.map(
-                    (pet) => PetAdoptionCard(
-                      pet: pet,
-                      favoritePets: widget.favoritePets,
-                      toggleFavorite: widget.toggleFavorite,
-                    ),
-                  ),
+                  ..._filteredPets
+                      .map(
+                        (pet) => PetAdoptionCard(
+                          pet: pet,
+                          favoritePets: widget.favoritePets,
+                          toggleFavorite: widget.toggleFavorite,
+                        ),
+                      )
+                      .toList(),
               ],
             ),
           ),

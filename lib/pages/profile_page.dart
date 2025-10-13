@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
+import '../main.dart';
 
 class ProfilePage extends StatelessWidget {
   final Function(bool) toggleTheme;
   final ThemeMode currentThemeMode;
+  // EKSİK OLAN PARAMETRELER EKLENDİ
+  final Locale currentLocale;
+  final Function(Locale) changeLanguage;
 
   const ProfilePage({
     super.key,
     required this.toggleTheme,
     required this.currentThemeMode,
+    required this.currentLocale, // Zorunlu parametre eklendi
+    required this.changeLanguage, // Zorunlu parametre eklendi
   });
 
   @override
@@ -17,6 +23,8 @@ class ProfilePage extends StatelessWidget {
         currentThemeMode == ThemeMode.dark ||
         (currentThemeMode == ThemeMode.system &&
             MediaQuery.of(context).platformBrightness == Brightness.dark);
+
+    final isTurkish = currentLocale == turkishLocale;
 
     return Center(
       child: Padding(
@@ -50,15 +58,25 @@ class ProfilePage extends StatelessWidget {
                 toggleTheme(!isDarkMode);
               },
             ),
+
             ListTile(
               leading: const Icon(Icons.translate),
-              title: const Text('Dil'),
+              title: Text(isTurkish ? 'Dil: Türkçe' : 'Language: English'),
               onTap: () {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(const SnackBar(content: Text('coming soon')));
+                final newLocale = isTurkish ? englishLocale : turkishLocale;
+                changeLanguage(newLocale);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      newLocale == englishLocale
+                          ? 'Language changed to English!'
+                          : 'Dil Türkçe olarak değiştirildi!',
+                    ),
+                  ),
+                );
               },
             ),
+
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Ayarlar'),

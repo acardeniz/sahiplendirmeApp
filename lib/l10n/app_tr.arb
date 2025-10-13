@@ -16,7 +16,7 @@
   "searchHint": "Tür, ırk veya ada göre ara (ör: kedi)...",
   "noResultsFound": "Aradığınız kriterlere uygun ilan bulunamadı.",
   "language" : "Dil",
-  "notifications" : "Bildirimler",
-  "darkMode" : "Karanlik Mod",
+  "notifications" : "Bildirimler"
+  "darkMode" : "Karanlik Mod"
   "logOut" : "Cikis Yap"
 }

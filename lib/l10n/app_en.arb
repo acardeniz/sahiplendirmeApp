@@ -1,0 +1,18 @@
+{
+  "@@locale": "en",
+  "homePage": "Home",
+  "search": "Search",
+  "favorites": "Favorites",
+  "profile": "Profile",
+  "adoptionCategories": "Adoption Categories",
+  "dog": "Dog",
+  "cat": "Cat",
+  "bird": "Bird",
+  "all": "All",
+  "popularAds": "Popular Ads",
+  "adsShowing": "Showing {type} ads!",
+  "noAdsInCategory": "No ads in selected category.",
+  "ads": "Ads",
+  "searchHint": "Search by type, breed, or name (e.g.: cat)...",
+  "noResultsFound": "No ads found matching your criteria."
+}
