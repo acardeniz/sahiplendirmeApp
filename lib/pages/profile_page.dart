@@ -13,8 +13,8 @@ class ProfilePage extends StatelessWidget {
     super.key,
     required this.toggleTheme,
     required this.currentThemeMode,
-    required this.currentLocale, // Zorunlu parametre eklendi
-    required this.changeLanguage, // Zorunlu parametre eklendi
+    required this.currentLocale,
+    required this.changeLanguage, 
   });
 
   @override
