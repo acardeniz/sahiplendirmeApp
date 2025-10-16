@@ -5,7 +5,7 @@ import '../main.dart';
 class ProfilePage extends StatelessWidget {
   final Function(bool) toggleTheme;
   final ThemeMode currentThemeMode;
-  // EKSİK OLAN PARAMETRELER EKLENDİ
+ 
   final Locale currentLocale;
   final Function(Locale) changeLanguage;
 
